@@ -56,4 +56,9 @@ export default {
    ** See https://nuxtjs.org/api/configuration-build/
    */
   build: {},
+  /*
+   ** Telemetry Property
+   ** See https://nuxtjs.org/api/configuration-telemetry/
+   */
+  telemetry: false,
 }
