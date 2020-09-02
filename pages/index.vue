@@ -1,63 +1,73 @@
 <template>
   <div class="container">
-    <div>
-      <Logo />
-      <h1 class="title">remoteclazz-nuxt</h1>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >
-          GitHub
-        </a>
+    <section class="hero is-info is-bold">
+      <div class="hero-body">
+        <div class="container">
+          <h1 class="title">
+            World weather
+          </h1>
+          <h2 class="subtitle">
+            The best weather app in Nuxt
+          </h2>
+        </div>
+      </div>
+    </section>
+    <!--<nav class="level">
+      <p class="level-item">
+        <strong>All</strong>
+      </p>
+      <p class="level-item">
+        <a>Published</a>
+      </p>
+      <p class="level-item">
+        <a>Drafts</a>
+      </p>
+      <p class="level-item">
+        <a>Deleted</a>
+      </p>
+      <p class="level-item">
+        <a class="button is-success">New</a>
+      </p>
+    </nav>-->
+    <section class="section">
+      <div class="container">
+        <h1 class="title">
+          France cities
+        </h1>
+      </div>
+    </section>
+    <div class="container is-fluid mb-6">
+      <div class="tile is-ancestor is-vertical is-8">
+        <article v-for="city in cities" :key="city.woeid" class="tile is-child">
+          <nuxt-link :to="`city/${city.woeid}`" class="tile is-child box">
+            <p>
+              {{ city.title }}
+            </p>
+          </nuxt-link>
+        </article>
       </div>
     </div>
+    <footer class="footer">
+      <p class="content has-text-centered">
+        Developed by
+        <a href="https://github.com/P0ppoff" rel="nofollow">Jules Hablot</a> with
+        <a href="https://bulma.io/" rel="nofollow">Bulma</a>and
+        <a href="https://www.metaweather.com/" rel="nofollow">MetaWeather</a> for
+        <a href="https://zenika.com/" rel="nofollow">Zenika</a> with ❤️
+      </p>
+    </footer>
   </div>
 </template>
-
 <script>
-export default {}
+export default {
+  computed: {
+    cities () {
+      return this.$store.getters.getFranceCities
+    }
+  }
+  // example https://www.metaweather.com/fr/2151330/
+  // TODO: add switch Celsius / Fahrenheit
+  // TODO: add switch mph/miles / kph/kilometres
+  // TODO: add form feeling wrong ? with random response : success or error
+}
 </script>
-
-<style>
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-.title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
-}
-</style>
