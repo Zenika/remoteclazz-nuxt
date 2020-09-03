@@ -38,8 +38,9 @@ export default {
     }
   }
   // example https://www.metaweather.com/fr/2151330/
-  // TODO: add switch Celsius / Fahrenheit
-  // TODO: add switch mph/miles / kph/kilometres
   // TODO: add form feeling wrong ? with random response : success or error
+  // TODO: détail par trois heure
+  // TODO: afficher les jours suivants
+  // TODO: add new city form lat long
 }
 </script>
