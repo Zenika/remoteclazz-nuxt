@@ -1,3 +1,5 @@
+import Vue from 'vue'
+
 export const state = () => ({
   currentWeather: null,
   latLongMap: {
@@ -23,6 +25,9 @@ export const getters = {
 export const mutations = {
   setCurrentCity (state, weather) {
     state.currentWeather = weather
+  },
+  addNewCity (state, { name, position }) {
+    Vue.set(state.latLongMap, name, position)
   }
 }
 
@@ -31,5 +36,9 @@ export const actions = {
     const [lat, long] = getters.getMapPosition[cityName]
     const cityWeather = await fetch(`http://www.7timer.info/bin/api.pl?lon=${long}&lat=${lat}&product=civillight&output=json`).then(response => response.json())
     commit('setCurrentCity', cityWeather)
+  },
+  addNewCity ({ commit }, { name, latitude, longitude }) {
+    const position = [latitude, longitude]
+    commit('addNewCity', { name, position })
   }
 }

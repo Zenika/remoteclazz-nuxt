@@ -6,7 +6,6 @@
       </nuxt-link>
     </nav>
     <h1>{{ cityName }}</h1>
-    <pre>{{ closerWeather }}</pre>
     <label>in {{ speedToDisplay }} <input v-model="isMeterPerSecond" type="checkbox"></label>
     <label>in {{ degreeToDisplay }} <input v-model="isCelsius" type="checkbox"></label>
     <details>
