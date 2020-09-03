@@ -7,98 +7,63 @@
     </nav>
     <h1>{{ cityName }}</h1>
     <pre>{{ closerWeather }}</pre>
-    <section>
-      <!-- TODO: print date in write format -->
-      <time datetime="closerWeather.date">weather for {{ closerWeather.date }}</time>
-      <article>
-        <h2>
-          Temperature
-        </h2>
-        <label>in {{ degreeToDisplay }} <input v-model="isCelsius" type="checkbox"></label>
-        <p>
-          {{ minTemp }} {{ degreeToDisplay }} to {{ maxTemp }} {{ degreeToDisplay }}
-        </p>
-      </article>
-      <article>
-        <h2>
-          Wind
-        </h2>
-        <p>
-          {{ WIND_FORCE[closerWeather.wind10m_max].legend }}
-        </p>
-        <p v-if="closerWeather.wind10m_max === 1">
-          wind speed: below 0.3{{ speedToDisplay }}
-        </p>
-        <p v-else-if="closerWeather.wind10m_max === 8">
-          wind speed: over 32.6{{ speedToDisplay }}
-        </p>
-        <p v-else>
-          wind speed: from {{ fromWind }}{{ speedToDisplay }} to {{ toWind }}{{ speedToDisplay }}
-        </p>
-        <label>in {{ speedToDisplay }} <input v-model="isMeterPerSecond" type="checkbox"></label>
-      </article>
-    </section>
+    <label>in {{ speedToDisplay }} <input v-model="isMeterPerSecond" type="checkbox"></label>
+    <label>in {{ degreeToDisplay }} <input v-model="isCelsius" type="checkbox"></label>
+    <details>
+      <summary>
+        <weather-day
+          :weather="closerWeather"
+          :is-celsius="isCelsius"
+          :is-meter-per-second="isMeterPerSecond"
+          :speed-to-display="speedToDisplay"
+          :degree-to-display="degreeToDisplay"
+        />
+      </summary>
+      <weather-day
+        v-for="weather in lastWeathers"
+        :key="weather.date"
+        :weather="weather"
+        :is-celsius="isCelsius"
+        :is-meter-per-second="isMeterPerSecond"
+        :speed-to-display="speedToDisplay"
+        :degree-to-display="degreeToDisplay"
+      />
+    </details>
   </div>
 </template>
 <script>
-
-const WIND_FORCE = {
-  1: { from: -Infinity, to: 0.3, legend: 'calm' },
-  2: { from: 0.3, to: 3.4, legend: 'light' },
-  3: { from: 3.4, to: 8.0, legend: 'moderate' },
-  4: { from: 8.0, to: 10.8, legend: 'fresh' },
-  5: { from: 10.8, to: 17.2, legend: 'strong' },
-  6: { from: 17.2, to: 24.5, legend: 'gale' },
-  7: { from: 24.5, to: 32.6, legend: 'storm' },
-  8: { from: 32.6, to: Infinity, legend: 'hurricane' }
-}
+import WeatherDay from '@/components/WeatherDay'
 
 export default {
+  components: { WeatherDay },
   async fetch ({ store, params }) {
     await store.dispatch('fetchWeatherCity', params.city)
   },
   data () {
     return {
       isCelsius: true,
-      isMeterPerSecond: true,
-      WIND_FORCE
+      isMeterPerSecond: true
     }
   },
   computed: {
     cityName () {
       return this.$route.params.city
     },
-    weather () {
+    weathers () {
       return this.$store.getters.getCurrentWeather
     },
     closerWeather () {
-      return this.weather.dataseries[0]
+      return this.weathers.dataseries[0]
     },
-    minTemp () {
-      return this.isCelsius ? this.closerWeather.temp2m.min : this.convertCelsiusToFahrenheit(this.closerWeather.temp2m.min)
-    },
-    maxTemp () {
-      return this.isCelsius ? this.closerWeather.temp2m.max : this.convertCelsiusToFahrenheit(this.closerWeather.temp2m.max)
-    },
-    degreeToDisplay () {
-      return `°${this.isCelsius ? 'C' : 'F'}`
-    },
-    fromWind () {
-      return this.isMeterPerSecond ? WIND_FORCE[this.closerWeather.wind10m_max].from : this.convertMeterSecondToMileHour(WIND_FORCE[this.closerWeather.wind10m_max].from)
-    },
-    toWind () {
-      return this.isMeterPerSecond ? WIND_FORCE[this.closerWeather.wind10m_max].to : this.convertMeterSecondToMileHour(WIND_FORCE[this.closerWeather.wind10m_max].to)
+    lastWeathers () {
+      const [, ...lastWeathers] = this.weathers.dataseries
+      return lastWeathers
     },
     speedToDisplay () {
       return this.isMeterPerSecond ? 'm/s' : 'mph'
-    }
-  },
-  methods: {
-    convertCelsiusToFahrenheit (temperature) {
-      return (temperature * 9 / 5) + 32
     },
-    convertMeterSecondToMileHour (speed) {
-      return speed * 2.237
+    degreeToDisplay () {
+      return `°${this.isCelsius ? 'C' : 'F'}`
     }
   }
 }

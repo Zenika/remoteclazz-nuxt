@@ -37,10 +37,8 @@ export default {
       return this.$store.getters.getCities
     }
   }
-  // example https://www.metaweather.com/fr/2151330/
   // TODO: add form feeling wrong ? with random response : success or error
   // TODO: détail par trois heure
-  // TODO: afficher les jours suivants
   // TODO: add new city form lat long
 }
 </script>
