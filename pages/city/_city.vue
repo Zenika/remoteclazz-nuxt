@@ -8,6 +8,12 @@
     <h1>{{ cityName }}</h1>
     <label>in {{ speedToDisplay }} <input v-model="isMeterPerSecond" type="checkbox"></label>
     <label>in {{ degreeToDisplay }} <input v-model="isCelsius" type="checkbox"></label>
+    <client-only placeholder="Map loading...">
+      <l-map :zoom="13" style="height: 350px" :center="position">
+        <l-tile-layer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png" />
+        <l-marker :lat-lng="position" />
+      </l-map>
+    </client-only>
     <details>
       <summary>
         <weather-day
@@ -50,6 +56,9 @@ export default {
     },
     weathers () {
       return this.$store.getters.getCurrentWeather
+    },
+    position () {
+      return this.$store.getters.getCityPosition(this.cityName)
     },
     closerWeather () {
       return this.weathers.dataseries[0]

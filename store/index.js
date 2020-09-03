@@ -18,6 +18,7 @@ export const state = () => ({
 
 export const getters = {
   getMapPosition: state => state.latLongMap,
+  getCityPosition: (state, getters) => cityName => getters.getMapPosition[cityName],
   getCities: state => Object.keys(state.latLongMap),
   getCurrentWeather: state => state.currentWeather
 }
