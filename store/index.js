@@ -1,35 +1,35 @@
-import { get, getPur } from '@/api/utils'
-
 export const state = () => ({
-  franceId: 23424819,
-  franceCities: [],
-  currentWeather: null
+  currentWeather: null,
+  latLongMap: {
+    SINGAPOUR: [1.295600, 103.858995],
+    BORDEAUX: [44.848089, -0.571017],
+    BREST: [48.389397, -4.499237],
+    MONTREAL: [45.523000, -73.581700],
+    GRENOBLE: [45.183916, 5.703630],
+    LYON: [45.767443, 4.858798],
+    RENNES: [48.113409, -1.661249],
+    NANTES: [47.207408, -1.556187],
+    LILLE: [50.648670, 3.075520],
+    PARIS: [48.878932, 2.328487]
+  }
 })
 
 export const getters = {
-  getFranceId (state) {
-    return state.franceId
-  },
-  getFranceCities: state => state.franceCities,
+  getMapPosition: state => state.latLongMap,
+  getCities: state => Object.keys(state.latLongMap),
   getCurrentWeather: state => state.currentWeather
 }
 
 export const mutations = {
-  addFranceCity (state, city) {
-    state.franceCities.push(city)
-  },
   setCurrentCity (state, weather) {
     state.currentWeather = weather
   }
 }
 
 export const actions = {
-  async nuxtServerInit ({ commit, getters }) {
-    const cities = await getPur(`location/${getters.getFranceId}`)
-    cities.children.forEach(city => commit('addFranceCity', city))
-  },
-  async fetchWeatherCity ({ commit }, cityId) {
-    const cityWeather = await get(`location/${cityId}`)
+  async fetchWeatherCity ({ commit, getters }, cityName) {
+    const [lat, long] = getters.getMapPosition[cityName]
+    const cityWeather = await fetch(`http://www.7timer.info/bin/api.pl?lon=${long}&lat=${lat}&product=civillight&output=json`).then(response => response.json())
     commit('setCurrentCity', cityWeather)
   }
 }
